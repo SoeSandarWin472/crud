@@ -18,29 +18,55 @@
 PHP Complete CRUD Application</nav>
 
 <div class="container">
-    <a href="add.php" class="btn btn-dark mb-3">Add New</a>
+  <?php if (isset($_GET['msg'])) {
+      $msg = $_GET['msg'];
+      echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+   ' .
+          $msg .
+          '
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>';
+  } ?>
 
+    <a href="add.php" class="btn btn-dark mb-3">Add New</a>
 
 <table class="table table-striped text-center">
  
   <thead class="table-dark">
     <tr>
       <th scope="col">ID</th>
-      <th scope="col">firstname</th>
-      <th scope="col">lastname</th>
-      <th scope="col">email</th>
-      <th scope="col">gender</th>
-       <th scope="col">action</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Gender</th>
+       <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+
+  <?php
+  include 'connect.php';
+  $sql = 'SELECT *FROM `userdata`';
+  $result = mysqli_query($conn, $sql);
+  while ($row = mysqli_fetch_assoc($result)) { ?>
+<tr>
+      <td><?php echo $row['id']; ?></td>
+     <td><?php echo $row['firstname']; ?></td>
+     <td><?php echo $row['lastname']; ?></td>
+      <td><?php echo $row['email']; ?></td>
+      <td><?php echo $row['gender']; ?></td>
+      <td>
+        <a href="edit.php?id=<?php echo $row[
+            'id'
+        ]; ?>" class="link-dark"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+        <a href="delete.php?id=<?php echo $row[
+            'id'
+        ]; ?>" class="link-dark"><i class="fa fa-trash" aria-hidden="true"></i></a>
+      </td>
     </tr>
+     <?php }
+  ?>
+    
   </tbody>
 </table>
 </div>

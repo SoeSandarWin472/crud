@@ -1,18 +1,20 @@
 <?php
 include 'connect.php';
 
+$id = $_GET['id'];
+
 if (isset($_POST['submit'])) {
     $fname = $_POST['firstname'];
     $lname = $_POST['lastname'];
     $email = $_POST['email'];
     $gender = $_POST['gender'];
 
-    $sql = "INSERT INTO `userdata`(`id`, `firstname`, `lastname`, `email`, `gender`) VALUES ('','$fname','$lname','  $email','   $gender')";
+    $sql = "UPDATE `userdata` SET `firstname`='$fname',`lastname`='$lname',`email`='$email',`gender`='$gender' WHERE id=$id";
 
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
-        header('Location: index.php?msg=New record created successfully');
+        header('Location: index.php?msg=Data Update successfully');
     } else {
         echo 'connection failed:' . mysqli_connect_error($conn);
     }
@@ -39,8 +41,14 @@ if (isset($_POST['submit'])) {
 PHP Complete CRUD Application</nav>
 <div class="container">
     <div class="text-center mb-4">
-        <h3>Add New User</h3>
+        <h3>Edit User</h3>
     </div>
+
+    <?php
+    $sql = "SELECT * FROM `userdata` WHERE id=$id LIMIT 1";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    ?>
 
     <div class="container d-flex justify-content-center">
         <div class="card mt-5 p-4">
@@ -48,31 +56,45 @@ PHP Complete CRUD Application</nav>
     <div class="row mb-3">
         <div class="col">
             <label for="form-label">First Name:</label>
-            <input type="text" class="form-control" name="firstname" placeholder="Enter your firstname">
+            <input type="text" class="form-control" name="firstname" placeholder="Enter your firstname" value="<?php echo $row[
+                'firstname'
+            ]; ?>">
         </div>
 
         <div class="col ">
             <label for="form-label">last Name:</label>
-            <input type="text" class="form-control" name="lastname" placeholder="Enter your lastname">
+            <input type="text" class="form-control" name="lastname" placeholder="Enter your lastname" value="<?php echo $row[
+                'lastname'
+            ]; ?>">
         </div>
 </div>
          <div class="row mb-3">
         <div class="col">
             <label for="form-label">Email:</label>
-            <input type="email" class="form-control" name="email" placeholder="Enter your email">
+            <input type="email" class="form-control" name="email" placeholder="Enter your email" value="<?php echo $row[
+                'email'
+            ]; ?>">
         </div>
 </div>
 
 <div class="form-group mb-3">
     <label for="">Gender:</label> &nbsp;
-<input type="radio" class="form-check-label" name="gender" id="male" value="male">
+<input type="radio" class="form-check-label" name="gender" id="male" value="male" <?php echo $row[
+    'gender'
+] == 'male'
+    ? 'checked'
+    : ''; ?>>
 <label for="male" class="form-input-label">Male</label> &nbsp; 
-<input type="radio" class="form-check-label" name="gender" id="female" value="female">
+<input type="radio" class="form-check-label" name="gender" id="female" value="female" <?php echo $row[
+    'gender'
+] == 'female'
+    ? 'checked'
+    : ''; ?>>
 <label for="female" class="form-input-label">Female</label>
 </div>
 
 <div>
-    <button type="submit" class="btn btn-success" name="submit">Save</button>
+    <button type="submit" class="btn btn-success" name="submit">Update</button>
     <a href="index.php" class="btn btn-danger">Cancle</a>
 </div>
 </form>
